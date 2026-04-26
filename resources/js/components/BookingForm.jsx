@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "/api";
 
 export default function BookingForm() {
   const [loading, setLoading] = useState(false);

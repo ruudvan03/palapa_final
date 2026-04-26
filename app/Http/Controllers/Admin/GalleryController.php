@@ -16,28 +16,36 @@ class GalleryController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'alt' => 'required|string|max:255',
-            'category' => 'nullable|string|max:255',
-            'cols' => 'nullable|string',
-            'rows' => 'nullable|string',
-        ]);
+{
+    // 1. Validamos usando los nombres exactos de tu formulario ('image', 'alt', etc.)
+    $request->validate([
+        'image'    => 'required|image|mimes:jpeg,png,jpg,webp|max:10240',
+        'alt'      => 'required|string|max:255',
+        'category' => 'nullable|string|max:255',
+        'cols'     => 'nullable|string',
+        'rows'     => 'nullable|string',
+    ]);
 
+    // 2. Buscamos el archivo con el nombre 'image'
+    if ($request->hasFile('image')) {
+        
+        // Guardamos el archivo en storage/app/public/gallery
         $path = $request->file('image')->store('gallery', 'public');
 
+        // 3. Registramos todos los datos en la base de datos
         GalleryImage::create([
-            'image_path' => $path,
-            'alt' => $request->alt,
-            'category' => $request->category,
-            'cols' => $request->cols,
-            'rows' => $request->rows,
-            'order' => GalleryImage::max('order') + 1,
+            'image_path' => $path, 
+            'alt'        => $request->alt, 
+            'category'   => $request->category,
+            'cols'       => $request->cols,
+            'rows'       => $request->rows,
         ]);
 
-        return back()->with('success', 'Imagen subida exitosamente a La Casona.');
+        return back()->with('success', '¡Foto guardada exitosamente en el mosaico!');
     }
+
+    return back()->with('error', 'No se detectó ninguna imagen. Intenta de nuevo.');
+}
 
     public function destroy(GalleryImage $gallery)
     {

@@ -6,7 +6,11 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
-use App\Http\Controllers\Admin\GalleryController; // <-- NUEVO CONTROLADOR AGREGADO
+use App\Http\Controllers\Admin\GalleryController;
+
+// AGREGAMOS LOS MODELOS PARA LA LANDING PAGE
+use App\Models\Room;
+use App\Models\GalleryImage; // <-- Corregido al nombre real de tu modelo
 
 /*
 |--------------------------------------------------------------------------
@@ -14,10 +18,24 @@ use App\Http\Controllers\Admin\GalleryController; // <-- NUEVO CONTROLADOR AGREG
 |--------------------------------------------------------------------------
 */
 
-// --- Autenticación ---
+// --- PÁGINA PÚBLICA (LANDING DE LA CASONA) ---
+// Esta es la primera cara del proyecto. Muestra la vista welcome.blade.php donde vive tu React.
+Route::get('/', function () {
+    // 1. Buscamos todas las habitaciones disponibles
+    $rooms = Room::where('is_available', true)->get();
+    
+    // 2. Traemos todas las fotos para la galería
+    $gallery = GalleryImage::all(); 
 
-// 1. Ruta para VER el formulario de inicio de sesión (GET)
-Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
+    // 3. Se las mandamos al HTML
+    return view('welcome', compact('rooms', 'gallery'));
+})->name('home');
+
+
+// --- AUTENTICACIÓN PARA ADMINISTRADORES ---
+
+// 1. Ruta para VER el formulario de inicio de sesión (GET) - Movido a /login
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 
 // 2. Ruta para PROCESAR las credenciales (POST)
 Route::post('/login', [LoginController::class, 'login'])->name('login.process');
@@ -26,7 +44,7 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.process');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
-// --- Rutas Protegidas (Requieren inicio de sesión previo) ---
+// --- RUTAS PROTEGIDAS (Requieren inicio de sesión previo) ---
 
 Route::middleware('auth')->group(function () {
     
@@ -82,7 +100,7 @@ Route::middleware('auth')->group(function () {
 
 
     // --- NUEVO: Gestión de Galería de Fotos ---
-    // Control de imágenes para el mosaico del frontend en Astro
+    // Control de imágenes para el mosaico
     Route::get('/admin/gallery', [GalleryController::class, 'index'])->name('admin.gallery.index');
     Route::post('/admin/gallery', [GalleryController::class, 'store'])->name('admin.gallery.store');
     Route::delete('/admin/gallery/{gallery}', [GalleryController::class, 'destroy'])->name('admin.gallery.destroy');
