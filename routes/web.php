@@ -21,11 +21,13 @@ use App\Models\GalleryImage; // <-- Corregido al nombre real de tu modelo
 // --- PÁGINA PÚBLICA (LANDING DE LA CASONA) ---
 // Esta es la primera cara del proyecto. Muestra la vista welcome.blade.php donde vive tu React.
 Route::get('/', function () {
-    // 1. Buscamos todas las habitaciones disponibles
-    $rooms = Room::where('is_available', true)->get();
+    // 1. Buscamos todas las habitaciones disponibles y las ordenamos por el nuevo campo sort_order
+    $rooms = Room::where('is_available', true)
+                 ->orderBy('sort_order', 'asc')
+                 ->get();
     
-    // 2. Traemos todas las fotos para la galería
-    $gallery = GalleryImage::all(); 
+    // 2. Traemos todas las fotos para la galería y también las ordenamos
+    $gallery = GalleryImage::orderBy('order', 'asc')->get(); 
 
     // 3. Se las mandamos al HTML
     return view('welcome', compact('rooms', 'gallery'));

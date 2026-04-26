@@ -19,6 +19,7 @@ class Room extends Model
         'capacity_label',
         'image_path',
         'is_available',
+        'sort_order',
     ];
 
     /**

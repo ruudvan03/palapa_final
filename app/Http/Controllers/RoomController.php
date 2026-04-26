@@ -15,7 +15,8 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $rooms = Room::with('images')->latest()->get();
+        // Ordenamos las habitaciones por su campo sort_order en el panel de admin también
+        $rooms = Room::with('images')->orderBy('sort_order', 'asc')->get();
         return view('admin.rooms.index', compact('rooms'));
     }
 
@@ -37,9 +38,10 @@ class RoomController extends Controller
             'price_per_night' => 'required|numeric',
             'capacity' => 'required|integer',
             'description' => 'nullable|string',
+            'sort_order' => 'nullable|integer', // <-- Validamos el orden
             'images' => 'required|array', 
-            // AQUÍ ESTÁ EL PRIMER CAMBIO: Agregamos webp a las reglas de store
-            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048', 
+            // Límite de 5MB para evitar errores silenciosos
+            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120', 
         ]);
 
         // 1. Crear la habitación (inicialmente sin imagen de portada)
@@ -50,6 +52,7 @@ class RoomController extends Controller
             'capacity' => $request->capacity,
             'capacity_label' => $request->capacity . ' Personas', // Etiqueta automática
             'description' => $request->description,
+            'sort_order' => $request->sort_order ?? 0, // <-- Guardamos el orden
             'is_available' => true,
         ]);
 
@@ -62,7 +65,8 @@ class RoomController extends Controller
                 // Crear registro en tabla room_images
                 RoomImage::create([
                     'room_id' => $room->id,
-                    'path' => $path
+                    'path' => $path,
+                    'sort_order' => $key // Guardamos un orden inicial para las fotos
                 ]);
 
                 // --- MAGIA: La primera imagen se convierte en la PORTADA ---
@@ -80,12 +84,15 @@ class RoomController extends Controller
      */
     public function edit(Room $room)
     {
-        $room->load('images');
+        // Traemos las imágenes ordenadas
+        $room->load(['images' => function($query) {
+            $query->orderBy('sort_order', 'asc');
+        }]);
         return view('admin.rooms.edit', compact('room'));
     }
 
     /**
-     * Actualiza los datos y añade más fotos a la galería sin borrar las anteriores.
+     * Actualiza los datos, maneja el nuevo orden, elimina fotos seleccionadas y añade nuevas.
      */
     public function update(Request $request, Room $room)
     {
@@ -94,10 +101,12 @@ class RoomController extends Controller
             'price_per_night' => 'required|numeric',
             'capacity' => 'required|integer',
             'description' => 'nullable|string',
-            // AQUÍ ESTÁ EL SEGUNDO CAMBIO: Agregamos webp a las reglas de update
-            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'sort_order' => 'nullable|integer',
+            'delete_images' => 'nullable|array', // <-- Validamos el arreglo de fotos a borrar
+            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
+        // 1. Actualizar datos principales de la habitación
         $room->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
@@ -105,18 +114,38 @@ class RoomController extends Controller
             'capacity' => $request->capacity,
             'capacity_label' => $request->capacity . ' Personas',
             'description' => $request->description,
+            'sort_order' => $request->sort_order ?? 0, // <-- Actualizamos el orden
         ]);
 
+        // 2. Lógica para ELIMINAR las imágenes que marcaste con el botecito de basura
+        if ($request->has('delete_images')) {
+            foreach ($request->delete_images as $imageId) {
+                $image = RoomImage::find($imageId);
+                if ($image) {
+                    // Borrar el archivo físico del servidor
+                    if (Storage::disk('public')->exists($image->path)) {
+                        Storage::disk('public')->delete($image->path);
+                    }
+                    // Borrar de la base de datos
+                    $image->delete();
+                }
+            }
+        }
+
+        // 3. Lógica para SUBIR NUEVAS imágenes
         if ($request->hasFile('images')) {
+            $maxOrder = $room->images()->max('sort_order') ?? 0;
+            
             foreach ($request->file('images') as $key => $file) {
                 $path = $file->store('rooms', 'public');
                 
                 RoomImage::create([
                     'room_id' => $room->id,
-                    'path' => $path
+                    'path' => $path,
+                    'sort_order' => $maxOrder + $key + 1 // Las ponemos al final
                 ]);
 
-                // Si la habitación NO tiene portada aún, usamos la primera nueva
+                // Si la habitación se quedó sin portada (porque la borraste), usamos esta nueva
                 if (!$room->image_path && $key === 0) {
                     $room->update(['image_path' => $path]);
                 }
@@ -141,7 +170,6 @@ class RoomController extends Controller
         
         // También borramos la imagen de portada si existe y es diferente
         if ($room->image_path && Storage::disk('public')->exists($room->image_path)) {
-            // Verificamos si no es la misma que ya borramos (caso raro pero posible)
             Storage::disk('public')->delete($room->image_path);
         }
         
@@ -151,7 +179,7 @@ class RoomController extends Controller
     }
 
     /**
-     * Eliminar una sola imagen de la galería.
+     * Eliminar una sola imagen de la galería (Por si tienes un botón de borrado directo).
      */
     public function deleteImage($id)
     {
@@ -190,6 +218,7 @@ class RoomController extends Controller
                       ->where('check_out', '>', $checkIn)
                       ->where('status', '!=', 'cancelled'); // Ignoramos las canceladas
             })
+            ->orderBy('sort_order', 'asc') // Las mandamos ordenadas al React también
             ->get();
 
         return response()->json($availableRooms);

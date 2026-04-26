@@ -43,7 +43,8 @@
                 <a href="#inicio" class="hover:text-emerald-600 transition-colors">Inicio</a>
                 <a href="#habitaciones" class="hover:text-emerald-600 transition-colors">Habitaciones</a>
                 <a href="#galeria" class="hover:text-emerald-600 transition-colors">Galería</a>
-                <a href="#ubicacion" class="hover:text-emerald-600 transition-colors">Ubicación</a> <a href="#faq" class="hover:text-emerald-600 transition-colors">Dudas</a>
+                <a href="#ubicacion" class="hover:text-emerald-600 transition-colors">Ubicación</a> 
+                <a href="#faq" class="hover:text-emerald-600 transition-colors">Dudas</a>
             </div>
             
             <a href="{{ route('login') }}" class="bg-slate-900 text-white px-8 py-4 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg">
@@ -91,15 +92,16 @@
                 <div class="group relative bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 hover:shadow-2xl transition-all duration-500 flex flex-col">
                     <div class="swiper room-swiper h-[400px] w-full relative">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <img src="/storage/{{ $room->image_path }}" class="w-full h-full object-cover">
-                            </div>
-                            @if($room->images)
+                            @if($room->images && $room->images->count() > 0)
                                 @foreach($room->images as $image)
                                 <div class="swiper-slide">
-                                    <img src="/storage/{{ $image->path }}" class="w-full h-full object-cover">
+                                    <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover">
                                 </div>
                                 @endforeach
+                            @elseif($room->image_path)
+                                <div class="swiper-slide">
+                                    <img src="{{ asset('storage/' . $room->image_path) }}" class="w-full h-full object-cover">
+                                </div>
                             @endif
                         </div>
                         <div class="swiper-button-next opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -134,21 +136,38 @@
             </div>
         </section>
 
-        <section id="galeria" class="py-32 bg-slate-50">
-            <div class="max-w-7xl mx-auto px-6 text-center mb-16">
-                <h2 class="text-5xl font-black uppercase tracking-tighter">Mosaico de <span class="font-serif italic font-normal lowercase text-emerald-600">Momentos</span></h2>
-                <p class="text-slate-500 mt-4 text-lg">Descubre la esencia de La Casona a través de nuestra lente.</p>
-            </div>
-            
-            <div class="max-w-[1600px] mx-auto px-6 columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6">
-                @foreach($gallery as $img)
-                <div class="break-inside-avoid mb-6 relative overflow-hidden rounded-[2rem] group shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer">
-                    
-                    <div class="absolute inset-0 bg-slate-900/20 group-hover:bg-transparent z-10 transition-colors duration-700"></div>
-                    
-                    <img src="/storage/{{ $img->image_path }}" class="w-full h-auto block object-cover transform scale-100 group-hover:scale-110 transition-transform duration-1000 ease-out">
+        <section id="galeria" class="py-32 bg-slate-50 overflow-hidden font-inter antialiased">
+            <div class="max-w-7xl mx-auto px-6 mb-12">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 text-center md:text-left">
+                    <div class="w-full">
+                        <div class="inline-flex items-center gap-2 mb-6">
+                            <span class="w-8 h-[2px] bg-emerald-500"></span>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-emerald-600">Conoce el espacio</span>
+                        </div>
+                        <h2 class="text-5xl font-black uppercase tracking-tighter">Nuestra <span class="font-serif italic font-normal lowercase text-emerald-600">Galería</span></h2>
+                        <p class="text-slate-500 mt-4 text-lg max-w-xl mx-auto md:mx-0">Descubre la esencia de La Casona a través de nuestra lente.</p>
+                    </div>
                 </div>
-                @endforeach
+            </div>
+
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="group flex max-md:flex-col justify-center gap-2">
+                    
+                    {{-- Limitamos a 5 fotos para que el acordeón tenga espacio de lucirse --}}
+                    @foreach($gallery->take(5) as $img)
+                    <article class="group/article relative w-full rounded-2xl overflow-hidden md:group-hover:[&:not(:hover)]:w-[20%] md:group-focus-within:[&:not(:focus-within):not(:hover)]:w-[20%] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.15)] before:absolute before:inset-x-0 before:bottom-0 before:h-1/3 before:bg-gradient-to-t before:from-black/50 before:transition-opacity md:before:opacity-0 md:hover:before:opacity-100 focus-within:before:opacity-100 after:opacity-0 md:group-hover:[&:not(:hover)]:after:opacity-100 md:group-focus-within:[&:not(:focus-within):not(:hover)]:after:opacity-100 after:absolute after:inset-0 after:bg-white/30 after:backdrop-blur after:transition-all focus-within:ring focus-within:ring-emerald-300">
+                        <a class="absolute inset-0 text-white z-10" href="#galeria">
+                            <span class="absolute inset-x-0 bottom-0 text-lg font-medium p-6 md:px-12 md:py-8 md:whitespace-nowrap md:truncate md:opacity-0 group-hover/article:opacity-100 group-focus-within/article:opacity-100 md:translate-y-2 group-hover/article:translate-y-0 group-focus-within/article:translate-y-0 transition duration-200 ease-[cubic-bezier(.5,.85,.25,1.8)] group-hover/article:delay-300 group-focus-within/article:delay-300">
+                                {{ $img->alt ?? 'Rincón de La Casona' }}
+                            </span>
+                        </a>
+                        <img class="object-cover h-72 md:h-[500px] w-full" 
+                             src="{{ asset('storage/' . $img->image_path) }}" 
+                             alt="{{ $img->alt ?? 'Foto Galería' }}">
+                    </article>
+                    @endforeach
+
+                </div>
             </div>
         </section>
 
@@ -183,8 +202,7 @@
                                 </div>
                                 <div>
                                     <h4 class="text-sm font-bold uppercase tracking-widest text-slate-900 mb-1">Contacto Directo</h4>
-                                    <p class="text-slate-500 text-sm">+52 (958) 107 2468<br>palapalacasona01@gmail.com
-</p>
+                                    <p class="text-slate-500 text-sm">+52 (958) 107 2468<br>palapalacasona01@gmail.com</p>
                                 </div>
                             </div>
                         </div>
@@ -264,7 +282,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const swipers = new Swiper('.room-swiper', {
+            // Inicialización de las Habitaciones
+            const roomSwipers = new Swiper('.room-swiper', {
                 loop: true,
                 speed: 800,
                 pagination: { el: '.swiper-pagination', clickable: true },
@@ -272,6 +291,9 @@
                 effect: 'fade',
                 fadeEffect: { crossFade: true }
             });
+
+            // Inicialización de la Galería Automática
+            
         });
     </script>
 </body>
