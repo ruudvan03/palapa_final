@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->string('name');           // Ej: "Habitación Doble"
-            $table->string('slug')->unique(); // Para la URL en Astro
+            $table->string('name');
+            $table->string('slug')->unique();
             $table->text('description')->nullable();
+            $table->boolean('is_available')->default(true);
+            $table->string('image_path')->nullable();
+            $table->string('image')->nullable();
             $table->decimal('price_per_night', 10, 2);
-            $table->integer('capacity');      // Ej: 2 personas
+            $table->integer('capacity');
+            $table->string('capacity_label')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
