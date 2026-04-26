@@ -38,7 +38,8 @@ class RoomController extends Controller
             'capacity' => 'required|integer',
             'description' => 'nullable|string',
             'images' => 'required|array', 
-            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048', 
+            // AQUÍ ESTÁ EL PRIMER CAMBIO: Agregamos webp a las reglas de store
+            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048', 
         ]);
 
         // 1. Crear la habitación (inicialmente sin imagen de portada)
@@ -93,7 +94,8 @@ class RoomController extends Controller
             'price_per_night' => 'required|numeric',
             'capacity' => 'required|integer',
             'description' => 'nullable|string',
-            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            // AQUÍ ESTÁ EL SEGUNDO CAMBIO: Agregamos webp a las reglas de update
+            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $room->update([
@@ -162,5 +164,34 @@ class RoomController extends Controller
         $image->delete();
 
         return back()->with('success', 'Imagen eliminada de la galería.');
+    }
+
+    /**
+     * Busca habitaciones disponibles para el frontend (React/Astro)
+     */
+    public function checkAvailability(Request $request)
+    {
+        $request->validate([
+            'check_in' => 'required|date',
+            'check_out' => 'required|date|after:check_in',
+            'guests' => 'required|integer|min:1',
+        ]);
+
+        $checkIn = $request->check_in;
+        $checkOut = $request->check_out;
+        $guests = $request->guests;
+
+        // Buscamos habitaciones: 1. Activas, 2. Con capacidad, 3. SIN reservas cruzadas
+        $availableRooms = \App\Models\Room::where('is_available', true)
+            ->where('capacity', '>=', $guests)
+            ->whereDoesntHave('reservations', function ($query) use ($checkIn, $checkOut) {
+                // Una reserva choca si su inicio es antes del nuevo fin y su fin es después del nuevo inicio
+                $query->where('check_in', '<', $checkOut)
+                      ->where('check_out', '>', $checkIn)
+                      ->where('status', '!=', 'cancelled'); // Ignoramos las canceladas
+            })
+            ->get();
+
+        return response()->json($availableRooms);
     }
 }

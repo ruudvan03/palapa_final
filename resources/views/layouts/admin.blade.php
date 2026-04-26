@@ -60,7 +60,7 @@
             <nav class="flex-1 px-4 py-6 space-y-3 overflow-y-auto overflow-x-hidden">
                 
                 {{-- Dashboard --}}
-                <a href="{{ route('admin.dashboard') }}" 
+                <a href="{{ route('admin.dashboard') ?? '#' }}" 
                    class="flex items-center rounded-xl transition-all p-3 group {{ request()->routeIs('admin.dashboard') ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-900/50' : 'text-emerald-100 hover:bg-emerald-900' }}"
                    :class="sidebarOpen ? 'justify-start' : 'justify-center'">
                     <svg class="w-6 h-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -73,8 +73,8 @@
                     Administración
                 </div>
 
-                {{-- Reservaciones (Habitaciones) --}}
-                <a href="{{ route('reservations.index') }}" 
+                {{-- Reservaciones --}}
+                <a href="{{ route('reservations.index') ?? '#' }}" 
                    class="flex items-center rounded-xl transition-all p-3 group {{ request()->routeIs('reservations.*') ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-900/50' : 'text-emerald-100 hover:bg-emerald-900' }}"
                    :class="sidebarOpen ? 'justify-start' : 'justify-center'">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -84,7 +84,7 @@
                 </a>
 
                 {{-- Habitaciones --}}
-                <a href="{{ route('rooms.index') }}" 
+                <a href="{{ route('rooms.index') ?? '#' }}" 
                    class="flex items-center rounded-xl transition-all p-3 group {{ request()->routeIs('rooms.*') ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-900/50' : 'text-emerald-100 hover:bg-emerald-900' }}"
                    :class="sidebarOpen ? 'justify-start' : 'justify-center'">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -93,19 +93,31 @@
                     <span x-show="sidebarOpen" x-transition.opacity.duration.200ms class="ml-3 font-bold text-sm uppercase tracking-wider whitespace-nowrap">Habitaciones</span>
                 </a>
 
+                {{-- SECCIÓN ACTUALIZADA: Eventos y Palapa --}}
                 <div x-show="sidebarOpen" x-transition.opacity class="pt-4 pb-2 text-xs font-black text-slate-400 uppercase tracking-[0.2em] px-4">
-                    Eventos
+                    Eventos y Palapa
                 </div>
 
-                {{-- PALAPA / EVENTOS (ACTUALIZADO) --}}
-                <a href="{{ route('events.index') }}" 
+                {{-- Gestión de Eventos (Original) --}}
+                <a href="{{ route('events.index') ?? '#' }}" 
                    class="flex items-center rounded-xl transition-all p-3 group {{ request()->routeIs('events.*') ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-900/50' : 'text-emerald-100 hover:bg-emerald-900' }}"
                    :class="sidebarOpen ? 'justify-start' : 'justify-center'">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
-                    <span x-show="sidebarOpen" x-transition.opacity.duration.200ms class="ml-3 font-bold text-sm uppercase tracking-wider whitespace-nowrap">Palapa / Eventos</span>
+                    <span x-show="sidebarOpen" x-transition.opacity.duration.200ms class="ml-3 font-bold text-sm uppercase tracking-wider whitespace-nowrap">Gestión Eventos</span>
                 </a>
+
+                {{-- Galería de Fotos Mosaico (Nuevo) --}}
+                <a href="{{ route('admin.gallery.index') ?? '#' }}" 
+                   class="flex items-center rounded-xl transition-all p-3 mt-1 group {{ request()->routeIs('admin.gallery.*') ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-900/50' : 'text-emerald-100 hover:bg-emerald-900' }}"
+                   :class="sidebarOpen ? 'justify-start' : 'justify-center'">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span x-show="sidebarOpen" x-transition.opacity.duration.200ms class="ml-3 font-bold text-sm uppercase tracking-wider whitespace-nowrap">Fotos Mosaico</span>
+                </a>
+
             </nav>
 
             {{-- Logout --}}
@@ -132,7 +144,7 @@
                         <p class="text-xs font-bold text-emerald-600 uppercase tracking-tighter">Administrador</p>
                         <p class="text-sm font-bold text-slate-700">{{ Auth::user()->name }}</p>
                     </div>
-                    <div class="h-10 w-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold shadow-lg shadow-emerald-200 text-lg">
+                    <div class="h-10 w-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold shadow-lg shadow-emerald-200 text-lg uppercase">
                         {{ substr(Auth::user()->name, 0, 1) }}
                     </div>
                 </div>

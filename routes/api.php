@@ -6,16 +6,20 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\RoomReserved;
 use App\Models\Room;
 use App\Models\Reservation;
+use App\Models\GalleryImage;
 use Carbon\Carbon;
+use App\Http\Controllers\Api\GalleryController;
 
 /**
  * RUTAS DE API - PALAPA LA CASONA
  */
 
+// Obtener todas las habitaciones
 Route::get('/rooms', function () {
-    return response()->json(Room::all());
+    return response()->json(Room::where('is_available', true)->get());
 });
 
+// Checar disponibilidad de fechas (CORREGIDO)
 Route::post('/check-availability', function (Request $request) {
     $request->validate([
         'check_in'  => 'required|date|after_or_equal:today',
@@ -27,17 +31,23 @@ Route::post('/check-availability', function (Request $request) {
     $end = $request->check_out;
     $guests = $request->guests;
 
-    $availableRooms = Room::whereDoesntHave('reservations', function ($query) use ($start, $end) {
-        $query->overlapping(null, $start, $end); 
-    })
-    ->when($guests, function ($query) use ($guests) {
-        return $query->where('capacity', '>=', $guests);
-    })
-    ->get();
+    // LÓGICA DE FECHAS CRUZADAS CORREGIDA
+    $availableRooms = Room::where('is_available', true)
+        ->whereDoesntHave('reservations', function ($query) use ($start, $end) {
+            $query->where(function ($q) use ($start, $end) {
+                $q->where('check_in', '<', $end)
+                  ->where('check_out', '>', $start);
+            })->where('status', '!=', 'cancelled'); // Opcional: Si tienes estados, ignora las canceladas
+        })
+        ->when($guests, function ($query) use ($guests) {
+            return $query->where('capacity', '>=', $guests);
+        })
+        ->get();
 
     return response()->json($availableRooms);
 });
 
+// Crear una nueva reservación (CORREGIDO EL OVERLAPPING)
 Route::post('/reserve-room', function (Request $request) {
     $validated = $request->validate([
         'name'           => 'required|string|max:255',
@@ -49,11 +59,18 @@ Route::post('/reserve-room', function (Request $request) {
         'payment_method' => 'required|in:transfer,cash',
     ]);
 
-    // Validación de disponibilidad real
-    $isOccupied = Reservation::overlapping($request->room_id, $request->check_in, $request->check_out)->exists();
+    $start = $request->check_in;
+    $end = $request->check_out;
+
+    // Validación de disponibilidad real CORREGIDA
+    $isOccupied = Reservation::where('room_id', $request->room_id)
+        ->where('check_in', '<', $end)
+        ->where('check_out', '>', $start)
+        ->where('status', '!=', 'cancelled')
+        ->exists();
 
     if ($isOccupied) {
-        return response()->json(['success' => false, 'message' => 'Fechas no disponibles.'], 422);
+        return response()->json(['success' => false, 'message' => 'Fechas no disponibles para esta habitación.'], 422);
     }
 
     try {
@@ -63,7 +80,7 @@ Route::post('/reserve-room', function (Request $request) {
         $days = $checkIn->diffInDays($checkOut);
         $totalPrice = $room->price_per_night * ($days ?: 1);
 
-        // Crear registro
+        // Crear registro en la base de datos
         $reservation = Reservation::create([
             'room_id'        => $request->room_id,
             'customer_name'  => $request->name,
@@ -76,7 +93,7 @@ Route::post('/reserve-room', function (Request $request) {
             'status'         => 'pending',
         ]);
 
-        // ENVÍO DE CORREO: Pasamos el objeto íntegro
+        // ENVÍO DE CORREO
         try {
             Mail::to($reservation->customer_email)->send(new RoomReserved($reservation));
         } catch (\Exception $e) {
@@ -95,3 +112,6 @@ Route::post('/reserve-room', function (Request $request) {
         return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
     }
 });
+
+// Obtener las fotos de la galería dinámicamente
+Route::get('/gallery', [GalleryController::class, 'index']);

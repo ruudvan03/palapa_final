@@ -6,6 +6,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\GalleryController; // <-- NUEVO CONTROLADOR AGREGADO
 
 /*
 |--------------------------------------------------------------------------
@@ -60,7 +61,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/reservations/{reservation}/pdf', [ReservationController::class, 'downloadContract'])->name('reservations.pdf');
 
 
-    // --- NUEVO: Gestión de Palapa / Eventos Sociales ---
+    // --- Gestión de Palapa / Eventos Sociales ---
     // Módulo independiente para la renta de áreas comunes por hora/día
     
     // Listado y Calendario de Eventos
@@ -78,5 +79,12 @@ Route::middleware('auth')->group(function () {
     // DOCUMENTACIÓN LEGAL (NUEVO: Contrato de Renta de Palapa)
     // Permite descargar el contrato específico para eventos en formato PDF
     Route::get('/admin/events/{event}/pdf', [EventController::class, 'downloadContract'])->name('events.pdf');
+
+
+    // --- NUEVO: Gestión de Galería de Fotos ---
+    // Control de imágenes para el mosaico del frontend en Astro
+    Route::get('/admin/gallery', [GalleryController::class, 'index'])->name('admin.gallery.index');
+    Route::post('/admin/gallery', [GalleryController::class, 'store'])->name('admin.gallery.store');
+    Route::delete('/admin/gallery/{gallery}', [GalleryController::class, 'destroy'])->name('admin.gallery.destroy');
 
 });
