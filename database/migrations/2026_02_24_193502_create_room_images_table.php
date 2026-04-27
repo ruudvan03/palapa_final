@@ -14,6 +14,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('room_id')->constrained('rooms')->onDelete('cascade');
             $table->string('path');
+            $table->integer('sort_order')->default(0); 
             $table->timestamps();
         });
     }
