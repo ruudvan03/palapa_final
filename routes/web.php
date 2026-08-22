@@ -8,101 +8,57 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\GalleryController;
 
-// AGREGAMOS LOS MODELOS PARA LA LANDING PAGE
 use App\Models\Room;
-use App\Models\GalleryImage; // <-- Corregido al nombre real de tu modelo
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
+use App\Models\GalleryImage;
 
 // --- PÁGINA PÚBLICA (LANDING DE LA CASONA) ---
-// Esta es la primera cara del proyecto. Muestra la vista welcome.blade.php donde vive tu React.
 Route::get('/', function () {
-    // 1. Buscamos todas las habitaciones disponibles y las ordenamos por el nuevo campo sort_order
     $rooms = Room::where('is_available', true)
                  ->orderBy('sort_order', 'asc')
                  ->get();
-    
-    // 2. Traemos todas las fotos para la galería y también las ordenamos
-    $gallery = GalleryImage::orderBy('order', 'asc')->get(); 
 
-    // 3. Se las mandamos al HTML
+    $gallery = GalleryImage::orderBy('order', 'asc')->get();
+
     return view('welcome', compact('rooms', 'gallery'));
 })->name('home');
 
 
-// --- AUTENTICACIÓN PARA ADMINISTRADORES ---
-
-// 1. Ruta para VER el formulario de inicio de sesión (GET) - Movido a /login
+// --- AUTENTICACIÓN ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-
-// 2. Ruta para PROCESAR las credenciales (POST)
 Route::post('/login', [LoginController::class, 'login'])->name('login.process');
-
-// 3. Ruta para Cerrar Sesión de forma segura
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
-// --- RUTAS PROTEGIDAS (Requieren inicio de sesión previo) ---
-
+// --- RUTAS PROTEGIDAS ---
 Route::middleware('auth')->group(function () {
-    
-    // DASHBOARD PRINCIPAL
-    // Conecta con el controlador para mostrar ingresos, ocupación y folios pendientes
+
+    // Dashboard
     Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');
 
-    // --- Gestión de Habitaciones (CRUD de espacios en La Casona) ---
+    // Habitaciones
     Route::resource('admin/rooms', RoomController::class)->names('rooms');
+    Route::delete('/admin/rooms/images/{id}', [RoomController::class, 'deleteImage'])->name('rooms.images.destroy');
+    Route::post('/admin/rooms/images/{id}/cover', [RoomController::class, 'setCover'])->name('rooms.images.cover');
 
-    // --- Gestión de Reservaciones (Habitaciones) ---
-    
-    // Listado principal con calendario y tabla de búsqueda
+    // Reservaciones
     Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('reservations.index');
-    
-    // Verificación de disponibilidad de habitaciones
     Route::get('/admin/reservations/check', [ReservationController::class, 'checkAvailability'])->name('reservations.check');
     Route::post('/admin/reservations/verify', [ReservationController::class, 'verify'])->name('reservations.verify');
-    
-    // Almacenamiento de nuevas reservas
     Route::post('/admin/reservations/store', [ReservationController::class, 'store'])->name('reservations.store');
-
-    // CONTROL MANUAL DE ESTADOS (Módulo de operación rápida)
     Route::patch('/admin/reservations/{reservation}/status/{status}', [ReservationController::class, 'updateStatus'])->name('reservations.status');
-
-    // Gestión de registros existentes
     Route::get('/admin/reservations/{reservation}/edit', [ReservationController::class, 'edit'])->name('reservations.edit');
     Route::put('/admin/reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update');
     Route::delete('/admin/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
-
-    // DOCUMENTACIÓN LEGAL (Contrato de Hospedaje)
     Route::get('/admin/reservations/{reservation}/pdf', [ReservationController::class, 'downloadContract'])->name('reservations.pdf');
 
-
-    // --- Gestión de Palapa / Eventos Sociales ---
-    // Módulo independiente para la renta de áreas comunes por hora/día
-    
-    // Listado y Calendario de Eventos
+    // Eventos
     Route::get('/admin/events', [EventController::class, 'index'])->name('events.index');
-    
-    // Almacenamiento con lógica de anticipo del 50%
     Route::post('/admin/events/store', [EventController::class, 'store'])->name('events.store');
-    
-    // Control de estados (Liquidado, Pendiente, Cancelado)
     Route::patch('/admin/events/{event}/status/{status}', [EventController::class, 'updateStatus'])->name('events.status');
-    
-    // Eliminación de eventos
     Route::delete('/admin/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
-
-    // DOCUMENTACIÓN LEGAL (NUEVO: Contrato de Renta de Palapa)
-    // Permite descargar el contrato específico para eventos en formato PDF
     Route::get('/admin/events/{event}/pdf', [EventController::class, 'downloadContract'])->name('events.pdf');
 
-
-    // --- NUEVO: Gestión de Galería de Fotos ---
-    // Control de imágenes para el mosaico
+    // Galería
     Route::get('/admin/gallery', [GalleryController::class, 'index'])->name('admin.gallery.index');
     Route::post('/admin/gallery', [GalleryController::class, 'store'])->name('admin.gallery.store');
     Route::delete('/admin/gallery/{gallery}', [GalleryController::class, 'destroy'])->name('admin.gallery.destroy');
