@@ -143,22 +143,21 @@
                     <h2 class="text-5xl font-black uppercase tracking-tighter">Todo lo que <span class="font-serif italic font-normal lowercase text-emerald-600">necesitas</span></h2>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                     @php
                     $amenidades = [
-                        ['icono' => '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/>', 'label' => 'Alberca'],
-                        ['icono' => '<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819"/>', 'label' => 'Palapa'],
-                        ['icono' => '<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>', 'label' => 'Jardín'],
-                        ['icono' => '<path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"/>', 'label' => 'WiFi'],
-                        ['icono' => '<path stroke-linecap="round" stroke-linejoin="round" d="M7 4a2 2 0 0 1 2 2v2H7V6a2 2 0 0 1 2-2Zm4 0a2 2 0 0 1 2 2v2h-2V6a2 2 0 0 1 2-2Zm4 0a2 2 0 0 1 2 2v2h-2V6a2 2 0 0 1 2-2ZM4 10h16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2Zm3 4v5m4-5v5m4-5v5"/>', 'label' => 'Cocina'],
-                        ['icono' => '<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/>', 'label' => 'Estacionamiento'],
+                        ['icono' => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M503.775,365.34c-4.265-0.774-8.479,1.297-10.525,4.997c-1.637,1.663-20.038,17.727-117.11,17.727c-57.89,0-94.04-13.112-129-25.793c-34.828-12.633-70.842-25.695-126.535-25.695c-47.103,0-81.087,5.184-101.01,15.405c-17.8,9.134-19.494,19.828-19.59,22.889C0.002,374.973,0,375.077,0,375.181v48.628c0,5.462,4.383,9.914,9.844,9.999c0.054,0.001,0.106,0.001,0.159,0.001c4.954,0,9.101-3.617,9.869-8.4c0.995-1.738,13.827-20.205,100.732-20.205c52.178,0,84.984,11.899,119.716,24.497c36.584,13.27,74.414,26.991,135.819,26.991c112.162,0,131.935-20.553,135.23-29.389c0.416-1.118,0.63-2.301,0.63-3.494v-48.628C512,370.343,508.536,366.198,503.775,365.34z M492,420.011c-5.443,3.986-29.567,16.681-115.86,16.681c-57.89,0-94.04-13.112-129-25.793c-34.828-12.633-70.842-25.695-126.535-25.695c-46.786,0-80.629,5.113-100.604,15.199v-23.83c1.729-2.652,16.38-19.997,100.604-19.997c52.178,0,84.984,11.899,119.716,24.497c36.584,13.27,74.414,26.991,135.819,26.991c64.001,0,97.919-6.691,115.86-14.08V420.011z"/><path d="M120.604,421.634c-30.396,0-55.56,2.185-74.791,6.494c-5.389,1.207-8.779,6.555-7.571,11.944c1.042,4.653,5.171,7.815,9.749,7.815c0.724,0,1.459-0.079,2.195-0.244c17.798-3.987,41.49-6.01,70.418-6.01c5.522,0,10-4.478,10-10C130.604,426.111,126.127,421.634,120.604,421.634z"/><path d="M376.14,473.122c-57.89,0-94.039-13.112-128.999-25.792c-21.178-7.683-43.077-15.625-69.288-20.562c-5.43-1.026-10.655,2.551-11.678,7.977c-1.022,5.428,2.549,10.655,7.977,11.678c24.617,4.636,44.801,11.957,66.17,19.708c36.584,13.27,74.414,26.991,135.818,26.991c5.522,0,10-4.478,10-10C386.14,477.6,381.662,473.122,376.14,473.122z"/><path d="M47.991,143.888c0.724,0,1.459-0.079,2.195-0.244c17.798-3.987,41.49-6.01,70.418-6.01c5.522,0,10-4.478,10-10c0-5.522-4.478-10-10-10c-30.396,0-55.56,2.185-74.791,6.494c-5.389,1.207-8.779,6.555-7.571,11.944C39.284,140.726,43.413,143.888,47.991,143.888z"/><path d="M503.775,275.281c-4.265-0.776-8.479,1.297-10.525,4.998c-1.637,1.662-20.038,17.727-117.11,17.727c-57.89,0-94.04-13.112-129-25.793c-34.828-12.633-70.842-25.695-126.535-25.695c-47.103,0-81.087,5.183-101.01,15.405c-17.8,9.133-19.494,19.827-19.59,22.888C0.002,284.914,0,285.019,0,285.122v48.628c0,5.462,4.383,9.914,9.844,9.999c0.054,0.001,0.106,0.001,0.159,0.001c4.954,0,9.101-3.617,9.869-8.4c0.995-1.738,13.827-20.204,100.732-20.204c52.178,0,84.984,11.899,119.716,24.497c36.584,13.27,74.414,26.991,135.819,26.991c112.162,0,131.935-20.553,135.23-29.39c0.416-1.118,0.63-2.301,0.63-3.494v-48.628C512,280.284,508.536,276.14,503.775,275.281z M492,329.952c-5.443,3.987-29.567,16.682-115.86,16.682c-57.89,0-94.04-13.112-129-25.793c-34.828-12.633-70.842-25.695-126.535-25.695c-46.786,0-80.629,5.113-100.604,15.199v-23.83c1.729-2.653,16.38-19.997,100.604-19.997c52.178,0,84.984,11.899,119.716,24.497c36.584,13.27,74.414,26.991,135.819,26.991c64.002,0,97.919-6.691,115.86-14.08V329.952z"/><path d="M503.775,182.397c-4.265-0.772-8.479,1.296-10.525,4.998c-1.637,1.662-20.038,17.727-117.11,17.727c-57.89,0-94.04-13.112-129-25.793c-34.828-12.633-70.842-25.695-126.535-25.695c-47.103,0-81.087,5.183-101.01,15.405c-17.8,9.133-19.494,19.827-19.59,22.888C0.002,192.03,0,192.135,0,192.238v48.628c0,5.462,4.383,9.913,9.844,9.999c0.054,0.001,0.106,0.001,0.159,0.001c4.954,0,9.101-3.617,9.869-8.4c0.995-1.738,13.827-20.204,100.732-20.204c52.178,0,84.984,11.899,119.716,24.497c36.584,13.27,74.414,26.991,135.819,26.991c112.162,0,131.935-20.554,135.23-29.39c0.416-1.118,0.63-2.301,0.63-3.494v-48.628C512,187.4,508.536,183.256,503.775,182.397z M492,237.068c-5.443,3.987-29.567,16.682-115.86,16.682c-57.89,0-94.04-13.112-129-25.793c-34.828-12.633-70.842-25.695-126.535-25.695c-46.786,0-80.629,5.113-100.604,15.199v-23.83c1.729-2.653,16.38-19.997,100.604-19.997c52.178,0,84.984,11.899,119.716,24.497c36.584,13.27,74.414,26.991,135.819,26.991c64.002,0,97.919-6.691,115.86-14.08V237.068z"/><path d="M336,184.878c0.511,0,1.01-0.051,1.5-0.125c0.49,0.074,0.989,0.125,1.5,0.125h63c5.522,0,10-4.478,10-10c0-5.522-4.478-10-10-10h-56v-24h56c5.522,0,10-4.478,10-10c0-5.522-4.478-10-10-10h-56v-24h56c5.522,0,10-4.478,10-10c0-5.522-4.478-10-10-10h-56v-13.5c0-13.51,10.99-24.5,24.5-24.5s24.5,10.99,24.5,24.5c0,5.522,4.478,10,10,10c5.522,0,10-4.478,10-10c0-24.537-19.963-44.5-44.5-44.5S326,38.841,326,63.378v111.5C326,180.4,330.478,184.878,336,184.878z"/><path d="M433,184.878c5.522,0,10-4.478,10-10v-111.5c0-13.51,10.99-24.5,24.5-24.5s24.5,10.99,24.5,24.5c0,5.522,4.478,10,10,10c5.522,0,10-4.478,10-10c0-24.537-19.963-44.5-44.5-44.5S423,38.841,423,63.378v111.5C423,180.4,427.478,184.878,433,184.878z"/></svg>', 'label' => 'Alberca'],
+                        ['icono' => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819"/></svg>', 'label' => 'Palapa'],
+                        ['icono' => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>', 'label' => 'Jardín'],
+                        ['icono' => '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"/></svg>', 'label' => 'WiFi'],
+                        ['icono' => '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 60.601 60.601" xmlns="http://www.w3.org/2000/svg"><path d="m43.686 42.623c-1.4462 0-2.6175-1.1738-2.6175-2.6175 0-1.4475 1.1712-2.6188 2.6175-2.6188 1.4438 0 2.6175 1.1712 2.6175 2.6188 0 1.4438-1.1738 2.6175-2.6175 2.6175zm-19.098 0c-1.445 0-2.6175-1.1738-2.6175-2.6175 0-1.4475 1.1725-2.6188 2.6175-2.6188 1.4462 0 2.6175 1.1712 2.6175 2.6188 0 1.4438-1.1712 2.6175-2.6175 2.6175zm0.30375-13.666 0.07875-0.0088c3.03-0.315 6.1138-0.475 9.1662-0.475 3.0538 0 6.1388 0.16 9.17 0.47625l0.07875 0.0087 1.7988 6.26h-22.1l1.8075-6.2612zm21.878 6.2612-2.2-7.665c-3.4212-0.4025-6.9038-0.60875-10.432-0.60875-3.53 0-7.0112 0.20625-10.432 0.60875l-2.2012 7.665c-1.32 0-2.3838 1.07-2.3838 2.39v8.9088h2.3662l-0.0012 3.805c0.57875 0.20875 1.1888 0.325 1.8412 0.325 0.64125 0 1.27-0.11 1.84-0.315v-3.8162l17.94-0.0038v3.81c0.58 0.20875 1.1888 0.325 1.8412 0.325 0.64125 0 1.2688-0.11 1.84-0.315l0.0012-3.82h2.375v-8.9038c0-1.32-1.0725-2.39-2.3938-2.39"/><path d="m16.538 19.054h1.4438c1.9262 0 3.4605-0.69225 3.4605-2.8882 0-2.1367-1.5344-2.8289-3.4605-2.8289h-1.4438zm-5.5965-9.688h6.6792c6.4087 0 9.4175 2.1667 9.4175 6.8897 0 4.2427-3.0987 6.7698-8.3342 6.7698h-2.166v7.3415h-5.5965v-21.001"/></svg>', 'label' => 'Estacionamiento'],
                     ];
                     @endphp
 
                     @foreach($amenidades as $a)
                     <div class="group flex flex-col items-center gap-3 p-6 bg-slate-50 rounded-[1.5rem] border border-slate-100 hover:bg-emerald-50 hover:border-emerald-100 transition-all duration-300 cursor-default">
                         <div class="p-3 bg-white rounded-2xl shadow-sm group-hover:bg-emerald-600 group-hover:text-white transition-all text-slate-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.75">{!! $a['icono'] !!}</svg>
+                            {!! $a['icono'] !!}
                         </div>
                         <span class="text-[11px] font-black uppercase tracking-widest text-slate-600 group-hover:text-emerald-700 transition-colors text-center">{{ $a['label'] }}</span>
                     </div>
@@ -329,7 +328,7 @@
                                 </div>
                                 <div>
                                     <h4 class="text-xs font-black uppercase tracking-widest text-slate-900 mb-1">Contacto</h4>
-                                    <p class="text-slate-500 text-sm">+52 (958) 130 7122<br>palapalacasona01@gmail.com</p>
+                                    <p class="text-slate-500 text-sm">+52 (958) 107 2468<br>palapalacasona01@gmail.com</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-4 group">
@@ -431,7 +430,7 @@
                        class="w-full sm:w-auto px-10 py-4 bg-emerald-600 text-white text-xs font-black uppercase tracking-widest rounded-full hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-900/40">
                         Reservar ahora
                     </a>
-                    <a href="https://wa.me/5219581307122" target="_blank" rel="noopener noreferrer"
+                    <a href="https://wa.me/5219581072468" target="_blank" rel="noopener noreferrer"
                        class="w-full sm:w-auto px-10 py-4 bg-white/10 border border-white/20 text-white text-xs font-black uppercase tracking-widest rounded-full hover:bg-white hover:text-slate-900 transition-all backdrop-blur">
                         Contactar por WhatsApp
                     </a>
@@ -469,7 +468,7 @@
             <div>
                 <h4 class="font-black uppercase text-[10px] tracking-[0.2em] mb-5 text-emerald-500">Contacto</h4>
                 <ul class="space-y-3 text-sm text-slate-400">
-                    <li>+52 (958) 130 7122</li>
+                    <li>+52 (958) 107 2468</li>
                     <li>palapalacasona01@gmail.com</li>
                     <li class="pt-2 text-slate-500">Llano Grande, Tonameca<br>Oaxaca, C.P. 70946</li>
                 </ul>
@@ -477,7 +476,7 @@
         </div>
         <div class="max-w-7xl mx-auto px-6 pt-10 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-slate-600">
             <p>© {{ date('Y') }} Palapa La Casona. Hecho en Oaxaca.</p>
-            <p>Designed by Ruter Digital Solutions MX</p>
+            <p>Designed by RTV SyS</p>
         </div>
     </footer>
 
@@ -491,17 +490,17 @@
         });
 
         // --- NAV: menú hamburguesa ---
-        const menuBtn    = document.getElementById('menu-btn');
+        const menuBtn   = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
-        const iconOpen   = document.getElementById('icon-open');
-        const iconClose  = document.getElementById('icon-close');
+        const iconOpen  = document.getElementById('icon-open');
+        const iconClose = document.getElementById('icon-close');
 
         menuBtn.addEventListener('click', () => {
             const isOpen = mobileMenu.classList.contains('open');
-            mobileMenu.classList.toggle('open',   !isOpen);
-            mobileMenu.classList.toggle('hidden',  isOpen);
-            iconOpen.classList.toggle('hidden',   !isOpen);
-            iconClose.classList.toggle('hidden',   isOpen);
+            mobileMenu.classList.toggle('open',  !isOpen);
+            mobileMenu.classList.toggle('hidden', isOpen);
+            iconOpen.classList.toggle('hidden',  !isOpen);
+            iconClose.classList.toggle('hidden',  isOpen);
         });
 
         // Cerrar menú al hacer clic en un link
