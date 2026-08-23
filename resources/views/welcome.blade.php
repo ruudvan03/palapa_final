@@ -329,7 +329,7 @@
                                 </div>
                                 <div>
                                     <h4 class="text-xs font-black uppercase tracking-widest text-slate-900 mb-1">Contacto</h4>
-                                    <p class="text-slate-500 text-sm">+52 (958) 107 2468<br>palapalacasona01@gmail.com</p>
+                                    <p class="text-slate-500 text-sm">+52 (958) 130 7122<br>palapalacasona01@gmail.com</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-4 group">
@@ -431,7 +431,7 @@
                        class="w-full sm:w-auto px-10 py-4 bg-emerald-600 text-white text-xs font-black uppercase tracking-widest rounded-full hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-900/40">
                         Reservar ahora
                     </a>
-                    <a href="https://wa.me/5219581072468" target="_blank" rel="noopener noreferrer"
+                    <a href="https://wa.me/5219581307122" target="_blank" rel="noopener noreferrer"
                        class="w-full sm:w-auto px-10 py-4 bg-white/10 border border-white/20 text-white text-xs font-black uppercase tracking-widest rounded-full hover:bg-white hover:text-slate-900 transition-all backdrop-blur">
                         Contactar por WhatsApp
                     </a>
@@ -469,7 +469,7 @@
             <div>
                 <h4 class="font-black uppercase text-[10px] tracking-[0.2em] mb-5 text-emerald-500">Contacto</h4>
                 <ul class="space-y-3 text-sm text-slate-400">
-                    <li>+52 (958) 107 2468</li>
+                    <li>+52 (958) 130 7122</li>
                     <li>palapalacasona01@gmail.com</li>
                     <li class="pt-2 text-slate-500">Llano Grande, Tonameca<br>Oaxaca, C.P. 70946</li>
                 </ul>

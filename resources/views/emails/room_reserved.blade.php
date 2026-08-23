@@ -118,7 +118,7 @@
                 @endif
 
                 <div class="btn-wrapper">
-                    <a href="https://wa.me/{{ env('VITE_WHATSAPP_NUMBER', '5219581072468') }}?text={{ urlencode('Hola, envío comprobante de mi reserva en La Casona. Folio: ' . $reservation->folio) }}" class="btn">Confirmar por WhatsApp</a>
+                    <a href="https://wa.me/{{ env('VITE_WHATSAPP_NUMBER', '5219581307122') }}?text={{ urlencode('Hola, envío comprobante de mi reserva en La Casona. Folio: ' . $reservation->folio) }}" class="btn">Confirmar por WhatsApp</a>
                 </div>
             </div>
             
