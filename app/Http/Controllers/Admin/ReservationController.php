@@ -73,9 +73,9 @@ class ReservationController extends Controller
             'reservation'    => $reservation,
             'check_in'       => Carbon::parse($reservation->check_in),
             'check_out'      => Carbon::parse($reservation->check_out),
-            'establishment'  => 'Palapa "La Casona"',
-            'representative' => 'María Magdalena Cruz García',
-            'city'           => 'San Pedro Pochutla, Oaxaca'
+            'establishment'  => config('casona.establishment'),
+            'representative' => config('casona.representative'),
+            'city'           => config('casona.city'),
         ];
 
         $pdf = \Pdf::loadView('admin.reservations.contract', $data)

@@ -4,18 +4,18 @@
 <div class="max-w-7xl mx-auto space-y-10">
     
     {{-- Encabezado --}}
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-start">
         <div>
-            <h2 class="text-3xl font-black text-slate-900 leading-tight">Módulo de Palapa / Eventos</h2>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-900 leading-tight">Módulo de Palapa / Eventos</h2>
             <p class="text-slate-500 font-medium text-sm">Gestiona la agenda y finanzas de las áreas comunes.</p>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-10">
+
         {{-- Lado Izquierdo: Formulario de Registro --}}
         <div class="lg:col-span-1">
-            <div class="bg-white rounded-[2.5rem] border border-slate-200 shadow-xl p-8 sticky top-10">
+            <div class="bg-white rounded-[2rem] md:rounded-[2.5rem] border border-slate-200 shadow-xl p-6 md:p-8 lg:sticky lg:top-10">
                 <h3 class="text-lg font-black text-slate-800 uppercase tracking-widest mb-6 flex items-center gap-2">
                     <span class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-sm">+</span>
                     Nuevo Evento
@@ -219,15 +219,14 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const calendarEl = document.getElementById('calendarPalapa');
+        const isMobile = window.innerWidth < 640;
         const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'es', 
-            headerToolbar: { 
-                left: 'prev,next today', 
-                center: 'title', 
-                right: 'dayGridMonth,timeGridWeek' 
-            },
-            buttonText: { today: 'Hoy', month: 'Mes', week: 'Semana' },
+            initialView: isMobile ? 'listWeek' : 'dayGridMonth',
+            locale: 'es',
+            headerToolbar: isMobile
+                ? { left: 'prev,next', center: 'title', right: 'today' }
+                : { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek' },
+            buttonText: { today: 'Hoy', month: 'Mes', week: 'Semana', list: 'Lista' },
             events: @json($calendarEvents),
             displayEventEnd: true,
             eventTimeFormat: { hour: 'numeric', minute: '2-digit', meridiem: 'short' },

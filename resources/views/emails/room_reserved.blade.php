@@ -12,8 +12,8 @@
         
         /* Header con Gradiente de Lujo */
         .header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 60px 20px; text-align: center; color: #ffffff; position: relative; }
-        .header h1 { margin: 0; font-size: 32px; font-weight: 300; letter-spacing: 8px; text-transform: uppercase; }
-        .header p { margin-top: 10px; opacity: 0.6; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; }
+        .header h1 { margin: 0; font-size: 32px; font-weight: 300; letter-spacing: 8px; text-transform: uppercase; color: #ffffff; }
+        .header p { margin-top: 10px; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; color: #ffffff; opacity: 0.85; }
         
         /* Contenido Principal */
         .content { padding: 45px 40px; color: #1e293b; line-height: 1.8; }
@@ -62,9 +62,9 @@
 <body>
     <div class="wrapper">
         <div class="container">
-            <div class="header">
-                <h1>LA CASONA</h1>
-                <p>Private Boutique Residency</p>
+            <div class="header" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 60px 20px; text-align: center; position: relative;">
+                <h1 style="margin: 0; font-size: 32px; font-weight: 300; letter-spacing: 8px; text-transform: uppercase; color: #ffffff !important; -webkit-text-fill-color: #ffffff;">LA CASONA</h1>
+                <p style="margin-top: 10px; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; color: #a7f3d0 !important; -webkit-text-fill-color: #a7f3d0;">Private Boutique Residency</p>
             </div>
             
             <div class="content">
@@ -106,8 +106,8 @@
                     
                     <table class="bank-data">
                         <tr><td><strong>Banco</strong></td><td style="text-align: right;">BBVA</td></tr>
-                        <tr><td><strong>Titular</strong></td><td style="text-align: right;">Palapa La Casona</td></tr>
-                        <tr><td><strong>CLABE</strong></td><td style="text-align: right; font-weight: 700;">0123 4567 8901 2345 67</td></tr>
+                        <tr><td><strong>Titular</strong></td><td style="text-align: right;">{{ env('VITE_BANK_TITULAR', 'Palapa La Casona') }}</td></tr>
+                        <tr><td><strong>CLABE</strong></td><td style="text-align: right; font-weight: 700;">{{ env('VITE_BANK_CLABE', '000000000000000000') }}</td></tr>
                         <tr><td><strong>Concepto</strong></td><td style="text-align: right; color: #059669;"><strong>{{ $reservation->folio }}</strong></td></tr>
                     </table>
                 </div>
@@ -118,15 +118,15 @@
                 @endif
 
                 <div class="btn-wrapper">
-                    <a href="https://wa.me/529514401726?text={{ urlencode('Hola, envío comprobante de mi reserva en La Casona. Folio: ' . $reservation->folio) }}" class="btn">Confirmar por WhatsApp</a>
+                    <a href="https://wa.me/{{ env('VITE_WHATSAPP_NUMBER', '5219581072468') }}?text={{ urlencode('Hola, envío comprobante de mi reserva en La Casona. Folio: ' . $reservation->folio) }}" class="btn">Confirmar por WhatsApp</a>
                 </div>
             </div>
             
             <div class="footer">
                 <div class="footer-logo">LA CASONA</div>
-                <div class="footer-address">San Felipe del Agua, Oaxaca de Juárez, México.</div>
-                <div class="copyright">&copy; {{ date('Y') }} Boutique Residency. Reservados todos los derechos.</div>
-                <p style="font-size: 9px; color: #cbd5e1; margin-top: 20px; text-transform: uppercase;">Este mensaje es confidencial y generado automáticamente por nuestro sistema de gestión académica y de hospedaje.</p>
+                <div class="footer-address">Domicilio Conocido, Llano Grande, Santa María Tonameca, Oaxaca, C.P. 70946</div>
+                <div class="copyright">&copy; {{ date('Y') }} Palapa La Casona. Reservados todos los derechos.</div>
+                <p style="font-size: 9px; color: #cbd5e1; margin-top: 20px; text-transform: uppercase;">Este mensaje es confidencial y generado automáticamente por nuestro sistema de reservas.</p>
             </div>
         </div>
     </div>

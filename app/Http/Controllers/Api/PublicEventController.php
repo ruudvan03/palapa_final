@@ -43,14 +43,16 @@ class PublicEventController extends Controller
             'include_kitchen'=> 'boolean',
         ]);
 
-        // 2. Verificar disponibilidad para evitar duplicados
+        // 2. Verificar traslape por rango de horas (igual que el panel admin)
         $isOccupied = Event::where('event_date', $validated['event_date'])
             ->where('status', '!=', 'cancelled')
+            ->where('start_time', '<', $validated['end_time'])
+            ->where('end_time', '>', $validated['start_time'])
             ->exists();
 
         if ($isOccupied) {
             return response()->json([
-                'error' => 'Lo sentimos, esta fecha ya ha sido reservada.'
+                'error' => 'Lo sentimos, ya existe un evento en ese horario.'
             ], 422);
         }
 
@@ -66,10 +68,10 @@ class PublicEventController extends Controller
         try {
             // Correo 1: Al Encargado (Notificación interna)
             // Se usa la dirección configurada en MAIL_FROM_ADDRESS del .env
-            Mail::to(config('mail.from.address'))->send(new NewReservationAlert($event));
+            Mail::to(config('mail.from.address'))->queue(new NewReservationAlert($event));
 
             // Correo 2: Al Huésped (Confirmación automática al cliente)
-            Mail::to($validated['customer_email'])->send(new GuestReservationConfirmation($event));
+            Mail::to($validated['customer_email'])->queue(new GuestReservationConfirmation($event));
 
         } catch (\Exception $e) {
             // Registramos el error en logs pero permitimos que el usuario reciba su folio

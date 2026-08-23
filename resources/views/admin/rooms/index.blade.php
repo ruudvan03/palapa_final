@@ -3,12 +3,12 @@
 @section('content')
 <div class="max-w-6xl mx-auto">
     {{-- Encabezado del Listado --}}
-    <div class="flex justify-between items-center mb-8">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-            <h2 class="text-3xl font-black text-slate-900 leading-tight">Habitaciones</h2>
-            <p class="text-slate-500 font-medium">Gestiona los espacios y galerías de La Casona</p>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-900 leading-tight">Habitaciones</h2>
+            <p class="text-slate-500 font-medium text-sm">Gestiona los espacios y galerías de La Casona</p>
         </div>
-        <a href="{{ route('rooms.create') }}" class="bg-emerald-600 text-white px-6 py-4 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-emerald-200 hover:bg-emerald-700 transition-all hover:-translate-y-0.5 flex items-center">
+        <a href="{{ route('rooms.create') }}" class="bg-emerald-600 text-white px-5 py-3 md:px-6 md:py-4 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-emerald-200 hover:bg-emerald-700 transition-all hover:-translate-y-0.5 flex items-center text-xs shrink-0">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
             </svg>
@@ -72,7 +72,7 @@
             </div>
 
             {{-- Información de la Habitación --}}
-            <div class="p-8">
+            <div class="p-5 md:p-8">
                 <div class="flex justify-between items-start mb-2">
                     <h3 class="text-xl font-black text-slate-800 leading-tight">{{ $room->name }}</h3>
                     <span class="flex items-center text-slate-500 text-[11px] font-black uppercase tracking-tighter bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">
@@ -88,18 +88,36 @@
                 </p>
                 
                 {{-- Acciones --}}
-                <div class="grid grid-cols-2 gap-4 border-t border-slate-100 pt-6">
-                    <a href="{{ route('rooms.edit', $room) }}" class="py-3 bg-slate-50 text-slate-600 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-100 transition-all text-center border border-slate-200/50">
-                        Editar
-                    </a>
-                    
-                    <form action="{{ route('rooms.destroy', $room) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta habitación y toda su galería?')">
+                <div class="border-t border-slate-100 pt-6 space-y-3">
+
+                    {{-- Toggle disponibilidad --}}
+                    <form action="{{ route('rooms.toggle', $room) }}" method="POST">
                         @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full py-3 bg-red-50 text-red-600 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all border border-red-100 shadow-sm shadow-red-100">
-                            Borrar
+                        @method('PATCH')
+                        <button type="submit"
+                                class="w-full py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all border
+                                       {{ $room->is_available
+                                           ? 'bg-emerald-50 text-emerald-700 border-emerald-100 hover:bg-emerald-100'
+                                           : 'bg-amber-50 text-amber-700 border-amber-100 hover:bg-amber-100' }}">
+                            {{ $room->is_available ? '✓ Disponible' : '✗ No disponible' }}
                         </button>
                     </form>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <a href="{{ route('rooms.edit', $room) }}"
+                           class="py-3 bg-slate-50 text-slate-600 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-100 transition-all text-center border border-slate-200/50">
+                            Editar
+                        </a>
+                        <form action="{{ route('rooms.destroy', $room) }}" method="POST"
+                              onsubmit="return confirm('¿Estás seguro de eliminar esta habitación y toda su galería?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="w-full py-3 bg-red-50 text-red-600 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all border border-red-100">
+                                Borrar
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

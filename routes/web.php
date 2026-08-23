@@ -14,6 +14,7 @@ use App\Models\GalleryImage;
 // --- PÁGINA PÚBLICA (LANDING DE LA CASONA) ---
 Route::get('/', function () {
     $rooms = Room::where('is_available', true)
+                 ->with(['images' => fn($q) => $q->orderBy('sort_order', 'asc')])
                  ->orderBy('sort_order', 'asc')
                  ->get();
 
@@ -37,6 +38,7 @@ Route::middleware('auth')->group(function () {
 
     // Habitaciones
     Route::resource('admin/rooms', RoomController::class)->names('rooms');
+    Route::patch('/admin/rooms/{room}/toggle', [RoomController::class, 'toggleAvailability'])->name('rooms.toggle');
     Route::delete('/admin/rooms/images/{id}', [RoomController::class, 'deleteImage'])->name('rooms.images.destroy');
     Route::post('/admin/rooms/images/{id}/cover', [RoomController::class, 'setCover'])->name('rooms.images.cover');
 

@@ -15,7 +15,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $rooms = Room::with('images')->orderBy('sort_order', 'asc')->get();
+        $rooms = Room::with(['images' => fn($q) => $q->orderBy('sort_order', 'asc')])->orderBy('sort_order', 'asc')->get();
         return view('admin.rooms.index', compact('rooms'));
     }
 
@@ -207,6 +207,17 @@ class RoomController extends Controller
     }
 
     /**
+     * Alterna la disponibilidad de la habitación (disponible ↔ no disponible).
+     */
+    public function toggleAvailability(Room $room)
+    {
+        $room->update(['is_available' => !$room->is_available]);
+
+        $msg = $room->is_available ? 'Habitación marcada como disponible.' : 'Habitación marcada como no disponible.';
+        return back()->with('success', $msg);
+    }
+
+    /**
      * Establece una imagen como portada de la habitación.
      */
     public function setCover($id)
@@ -214,6 +225,19 @@ class RoomController extends Controller
         $image = RoomImage::findOrFail($id);
         $room  = Room::findOrFail($image->room_id);
 
+        // Intercambiar sort_order con la imagen que actualmente ocupa el primer lugar
+        // para que la portada elegida aparezca primero en los carruseles
+        $currentFirst = RoomImage::where('room_id', $room->id)
+                                 ->orderBy('sort_order', 'asc')
+                                 ->first();
+
+        if ($currentFirst && $currentFirst->id !== $image->id) {
+            $oldOrder = $image->sort_order;
+            $image->update(['sort_order' => $currentFirst->sort_order]);
+            $currentFirst->update(['sort_order' => $oldOrder]);
+        }
+
+        // Actualizar la portada en la tabla rooms
         $room->update(['image_path' => $image->path]);
 
         return back()->with('success', 'Portada actualizada.');

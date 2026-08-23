@@ -18,7 +18,7 @@
     </div>
 
     {{-- SECCIÓN DEL CALENDARIO --}}
-    <div class="bg-white rounded-[2.5rem] border border-slate-200 shadow-xl p-8">
+    <div class="bg-white rounded-[2rem] md:rounded-[2.5rem] border border-slate-200 shadow-xl p-4 md:p-8">
         <div class="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
             <div class="flex items-center gap-3">
                 <div class="bg-emerald-100 text-emerald-600 p-2 rounded-xl">
@@ -155,18 +155,18 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const calendarEl = document.getElementById('calendar');
+        const isMobile = window.innerWidth < 640;
         const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
+            initialView: isMobile ? 'listWeek' : 'dayGridMonth',
             locale: 'es',
-            headerToolbar: { 
-                left: 'prev,next today', 
-                center: 'title', 
-                right: 'dayGridMonth,timeGridWeek' 
-            },
+            headerToolbar: isMobile
+                ? { left: 'prev,next', center: 'title', right: 'today' }
+                : { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek' },
             buttonText: {
                 today: 'Hoy',
                 month: 'Mes',
-                week: 'Semana'
+                week: 'Semana',
+                list: 'Lista'
             },
             events: @json($events),
             height: 'auto',

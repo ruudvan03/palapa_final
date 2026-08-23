@@ -104,10 +104,10 @@ class EventController extends Controller
         $data = [
             'logo'           => $logoBase64,
             'event'          => $event,
-            'meses'          => $meses, // Pasamos el diccionario a la vista
-            'establishment'  => 'Palapa “La Casona”',
-            'representative' => 'María Magdalena Cruz García',
-            'city'           => 'San Pedro Pochutla, Oaxaca'
+            'meses'          => $meses,
+            'establishment'  => config('casona.establishment'),
+            'representative' => config('casona.representative'),
+            'city'           => config('casona.city'),
         ];
 
         $pdf = Pdf::loadView('admin.events.contract', $data)

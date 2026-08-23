@@ -6,9 +6,9 @@
     <title>Login - La Casona</title>
     @vite(['resources/css/app.css', 'resources/js/app.jsx'])
 </head>
-<body class="h-screen w-full overflow-hidden font-sans">
+<body class="min-h-screen w-full font-sans">
 
-    <div class="relative min-h-screen flex items-center justify-center bg-cover bg-center" 
+    <div class="relative min-h-screen flex items-center justify-center bg-cover bg-center py-8"
          style="background-image: url('/images/login.png');">
         
         <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>

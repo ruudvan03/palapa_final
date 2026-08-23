@@ -3,16 +3,14 @@
 @section('content')
 <div class="max-w-6xl mx-auto space-y-10">
     {{-- Encabezado Dinámico --}}
-    <div class="mb-10 flex justify-between items-end">
+    <div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3">
         <div>
-            <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Bienvenido, {{ Auth::user()->name }}</h2>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Bienvenido, {{ Auth::user()->name }}</h2>
             <p class="text-slate-500 mt-1 text-sm">Torre de control central de Palapa "La Casona".</p>
         </div>
-        <div class="hidden md:block">
-            <span class="text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-4 py-2 rounded-full border border-emerald-100">
-                {{ now()->translatedFormat('d F, Y') }}
-            </span>
-        </div>
+        <span class="text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-4 py-2 rounded-full border border-emerald-100 whitespace-nowrap">
+            {{ now()->translatedFormat('d F, Y') }}
+        </span>
     </div>
 
     {{-- Grid de Métricas --}}
@@ -64,8 +62,8 @@
     </div>
 
     {{-- Gráfica y Card Palapa --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-        <div class="lg:col-span-2 bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
+        <div class="lg:col-span-2 bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-xl">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="font-black text-slate-800 uppercase tracking-widest text-sm">Comportamiento de Ingresos</h3>
                 <span class="text-[10px] font-black text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase">Hospedaje</span>

@@ -19,7 +19,9 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:4321'],
+    // En .env: CORS_ALLOWED_ORIGINS=https://tudominio.com,https://www.tudominio.com
+    // Para desarrollo local usa * o deja vacío
+    'allowed_origins' => array_filter(explode(',', env('CORS_ALLOWED_ORIGINS', '*'))),
 
     'allowed_origins_patterns' => [],
 

@@ -12,7 +12,9 @@ use App\Http\Controllers\Api\GalleryController;
 
 /**
  * RUTAS DE API - PALAPA LA CASONA
+ * throttle:60,1 = máximo 60 peticiones por minuto por IP
  */
+Route::middleware('throttle:60,1')->group(function () {
 
 // Obtener todas las habitaciones
 Route::get('/rooms', function () {
@@ -95,17 +97,20 @@ Route::post('/reserve-room', function (Request $request) {
 
         // ENVÍO DE CORREO
         try {
-            Mail::to($reservation->customer_email)->send(new RoomReserved($reservation));
+            Mail::to($reservation->customer_email)->queue(new RoomReserved($reservation));
         } catch (\Exception $e) {
             \Log::error("Error Mail: " . $e->getMessage());
         }
 
         return response()->json([
-            'success' => true,
-            'folio'   => $reservation->folio,
-            'email'   => $reservation->customer_email,
-            'total'   => $totalPrice,
-            'payment' => $request->payment_method
+            'success'    => true,
+            'folio'      => $reservation->folio,
+            'email'      => $reservation->customer_email,
+            'total'      => $totalPrice,
+            'payment'    => $request->payment_method,
+            'room_name'  => $room->name,
+            'check_in'   => $request->check_in,
+            'check_out'  => $request->check_out,
         ], 201);
 
     } catch (\Exception $e) {
@@ -115,3 +120,5 @@ Route::post('/reserve-room', function (Request $request) {
 
 // Obtener las fotos de la galería dinámicamente
 Route::get('/gallery', [GalleryController::class, 'index']);
+
+}); // fin throttle
